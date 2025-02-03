@@ -5,7 +5,7 @@
 #### Date: February 2, 2025
 
 ## **Introduction**
-We will explore the different databases of a fictitious company (Northwind database), which seeks to make the decision of paying a bonus to the employees who have made the 5 highest sales.
+In this project, we will explore the Northwind database, a fictitious company's data repository, to solve a business problem: identifying the top 5 employees with the highest sales and awarding them a bonus. Through this process, we will learn how to use SQL queries to join tables, calculate data, and aggregate results to make informed business decisions.
 
 ## **Task 1 : Project and Database Introduction**
 **Objective:** Explore different databases to understand their structure, including the columns and the type of information they contain.
@@ -120,3 +120,26 @@ GROUP BY LastName, FirstName,Orders.OrderID;
 ```
 ![Image](https://github.com/user-attachments/assets/1b860bbc-bc41-4158-8842-16e101d3880b)
 
+## **Task 5 : Display the Solution**
+**Objective:** Present data in a structured format that provides valuable insights to support informed business decisions.
+
+**Key Takeaways**
+- Limiting the number of rows that display as the result of an SQL query can be accomplished using the LIMIT command.
+- In SQL code, the HAVING command applies a filter after aggregation.
+- A data analyst often strives to anticipate alternative types of data that may address a business problem.
+
+Perform analysis and write SQL code, keeping in mind the limitations provided by the W3Schools SQL editor. The following code reflects this approach.
+```
+SELECT TOP 5 LastName, FirstName, Orders.OrderID, SalesAmount
+FROM (
+  SELECT LastName, FirstName, Orders.OrderID, SUM(Quantity * Price) as SalesAmount
+  FROM (((Employees
+	INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID)
+	INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID)
+	INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID)
+  GROUP BY LastName, FirstName, Orders.OrderID
+) AS Subquery
+ORDER BY SalesAmount DESC;
+```
+## **Conclusion**
+By joining multiple tables and performing SQL calculations, we successfully identified the top-performing employees based on their sales figures. The analysis demonstrated the power of SQL in aggregating and filtering data, ultimately providing clear insights that can guide business decisions. This exercise emphasizes the importance of understanding database structure and applying SQL skills to solve real-world business challenges
