@@ -46,7 +46,6 @@ FROM Employees;
 
 We are going to use 4 tables in order to solve our business problem: Employees, Orders, Order Details and  Products.
 ![Image](https://github.com/user-attachments/assets/b5bb05ed-771b-4a5a-9a08-85722b55b4f4)
-
 Values must sometimes be calculated:  
     <ins> Sales amount per item = Quantity multiplied by Unit Price </ins>
 ```
@@ -59,6 +58,37 @@ ORDER BY OrderId;
 
 SELECT *
 FROM Products;
+```
+
+## **Task 3 : Joining Tables Together in SQL to Obtain Data for Analysis**
+**Objective:** Retrieve the necessary data to answer a business question by joining relevant fields from multiple tables using SQL.
+
+**Key Takeaways**
+- To join two tables, they must share a common column.
+- The SQL INNER JOIN command returns only rows that match between two tables.
+- An SQL query can be keyed into the SQL Tryit editor without regard to case; however, correct spelling and punctuation is critical
+
+To achieve this, we will use the following fields found in different data tables, as shown in the diagram below
+| Tables | Fields |
+| ------- | ---------|
+| Employees | LastName and FirstName |
+| Orders | OrderID |
+| OrderDetails | ProductID and Quantity |
+| Products | Price |
+
+![Image](https://github.com/user-attachments/assets/2389f205-9250-4337-994e-27707bf374dd)
+> [!TIP]
+>**Reminder:** Tables must have a common field to establish relationships between them.
+
+```
+SELECT LastName, FirstName, Orders.OrderID, Products.ProductID,
+            Quantity, Price
+FROM Employees
+  INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID
+  INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+  INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID
+ORDER BY LastName, FirstName;
+
 ```
 
 
