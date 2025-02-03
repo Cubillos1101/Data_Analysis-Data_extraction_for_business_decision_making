@@ -7,11 +7,6 @@
 ## **Introduction**
 We will explore the different databases of a fictitious company (Northwind database), which seeks to make the decision of paying a bonus to the employees who have made the 5 highest sales.
 
-As a method of increasing future sales, the company has decided to give employee bonuses for exemplary performance in sales. 
-Bonuses will be awarded to those employees who are responsible for the five highest order amounts.
-How can we identify those employees?
-
-
 ## **Task 1 : Project and Database Introduction**
 **Objective:** Explore different databases to understand their structure, including the columns and the type of information they contain.
 
@@ -37,7 +32,9 @@ FROM Employees;
 ```
 
 # **Task 2 : A Look at the Question and the Suggested Solution**
-**Objective:** Identify the structure of different databases and, based on the question to be answered, select the most relevant databases to obtain accurate insights.
+**Objective:** Identify the structure of different databases and, based on the question to be answered, select the most relevant databases to obtain accurate insights.  
+**Business Problem:**  As a method of increasing future sales, the company has decided to give employee bonuses for exemplary performance in sales. Bonuses will be awarded to those employees who are responsible for the five highest order amounts.  
+- <ins>**How can we identify those employees?**<ins>
 
 **Key Takeaways**
 - The data analyst strives to use data to answer business questions.
@@ -75,21 +72,51 @@ To achieve this, we will use the following fields found in different data tables
 | Orders | OrderID |
 | OrderDetails | ProductID and Quantity |
 | Products | Price |
-
-![Image](https://github.com/user-attachments/assets/2389f205-9250-4337-994e-27707bf374dd)
 > [!TIP]
 >**Reminder:** Tables must have a common field to establish relationships between them.
+>![Image](https://github.com/user-attachments/assets/2389f205-9250-4337-994e-27707bf374dd)
+
 
 ```
 SELECT LastName, FirstName, Orders.OrderID, Products.ProductID,
             Quantity, Price
-FROM Employees
-  INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID
-  INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
-  INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID
+FROM (((Employees
+  INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID)
+  INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID)
+  INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID)
 ORDER BY LastName, FirstName;
 
 ```
 
+## **Task 4 : Calculate and Summarize Sales for each Order**
+**Objective:**  Write SQL code to calculate and aggregate data by determining the total sales value per order. This involves multiplying quantity by price for each line item and then summarizing the results to obtain the overall order total.
 
+**Key Takeaways**
+- New, temporary fields can be created as a result of a calculation in SQL.
+- Aggregating or grouping data can make it more useful for decision making.
+- In SQL code, the SUM() function, together with the GROUP BY clause, can be used to aggregate data.
+
+**1.** Calculate Quantity * Price for each line item on the order.
+```
+SELECT LastName, FirstName, Orders.OrderID, Products.ProductID,
+        	Quantity, Price, Quantity * Price as SalesAmount
+FROM (((Employees
+  INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID)
+  INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID)
+  INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID)
+ORDER BY LastName, FirstName;
+```
+![Image](https://github.com/user-attachments/assets/5fd58be6-f05e-437e-a26a-46857794e649)
+
+**2.** Add together (summarize) the line item totals to get one total sales value per order.
+
+```
+SELECT LastName, FirstName, Orders.OrderID, SUM(Quantity * Price) as SalesAmount
+FROM (((Employees
+  INNER JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID)
+  INNER JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID)
+  INNER JOIN Products ON OrderDetails.ProductID = Products.ProductID)
+GROUP BY LastName, FirstName,Orders.OrderID;
+```
+![Image](https://github.com/user-attachments/assets/1b860bbc-bc41-4158-8842-16e101d3880b)
 
